@@ -1,0 +1,87 @@
+Sub Inserir()
+
+bloqueado = True
+Dim tabela As ListObject
+Dim n As Integer, id As Integer
+
+Set tabela = Planilha1.ListObjects(1)
+id = Range("ID").Value
+
+n = tabela.Range.Rows.Count
+tabela.Range(n, 1).Value = id
+tabela.Range(n, 2).Value = UserForm1.txtnome.Value
+tabela.Range(n, 3).Value = UserForm1.txtprofissao.Value
+tabela.Range(n, 4).Value = UserForm1.txtdatanasc.Value
+tabela.Range(n, 5).Value = UserForm1.cbbestadocivil.Value
+
+UserForm1.ListBox1.RowSource = ""
+tabela.ListRows.Add
+Range("ID").Value = id + 1
+
+Call Atualizar_ListBox
+Call LimparCampos
+MsgBox "Cadastrado com sucesso!", vbInformation, "Informação"
+bloqueado = False
+
+End Sub
+
+Sub Editar()
+
+bloqueado = True
+Dim tabela As ListObject
+Dim n As Integer, l As Integer
+Set tabela = Planilha1.ListObjects(1)
+
+n = UserForm1.ListBox1.Value
+l = tabela.Range.Columns().Find(n, , , xlWhole).Row
+
+tabela.Range(l, 2).Value = UserForm1.txtnome.Value
+tabela.Range(l, 3).Value = UserForm1.txtprofissao.Value
+tabela.Range(l, 4).Value = UserForm1.txtdatanasc.Value
+tabela.Range(l, 5).Value = UserForm1.cbbestadocivil.Value
+
+Call Atualizar_ListBox
+Call LimparCampos
+MsgBox "O Registro foi atualizado"
+bloqueado = False
+End Sub
+
+Sub Atualizar_ListBox()
+bloqueado = True
+Dim tabela As ListObject
+Set tabela = Planilha1.ListObjects(1)
+
+UserForm1.ListBox1.RowSource = tabela.DataBodyRange.Address(, , , True)
+bloqueado = False
+End Sub
+
+Sub Deletar()
+
+bloqueado = True
+Dim tabela As ListObject
+Dim n As Integer, l As Integer
+Set tabela = Planilha1.ListObjects(1)
+
+n = UserForm1.ListBox1.Value
+l = tabela.Range.Columns(1).Find(n, , , xlWhole).Row
+
+UserForm1.ListBox1.RowSource = ""
+tabela.Range.Rows(l).Delete
+
+Call Atualizar_ListBox
+Call LimparCampos
+MsgBox "O Registro foi deletado"
+bloqueado = False
+
+End Sub
+
+Sub LimparCampos()
+UserForm1.txtnome.Value = ""
+UserForm1.txtdatanasc.Value = ""
+UserForm1.txtprofissao.Value = ""
+UserForm1.cbbestadocivil.Value = ""
+End Sub
+
+Sub EXIBIR()
+UserForm1.Show
+End Sub
